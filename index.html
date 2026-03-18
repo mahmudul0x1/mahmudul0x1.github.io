@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD MAHMUDUL HASAN // SECURITY ENGINEER</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a05;
+    --bg2: #080f08;
+    --green: #00ff41;
+    --green-dim: #00c832;
+    --green-dark: #003f10;
+    --cyan: #00e5ff;
+    --cyan-dim: #00b8cc;
+    --red: #ff2e2e;
+    --yellow: #ffe600;
+    --white: #d0ffd0;
+    --border: #0a3a0a;
+    --panel: #050e05;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Orbitron', sans-serif;
+    --retro: 'VT323', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* CRT glow overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--green-dim); }
+
+  /* ── BOOT SCREEN ── */
+  #boot {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--retro);
+    font-size: 22px;
+    animation: bootFade 0.5s ease 3.2s forwards;
+  }
+
+  @keyframes bootFade {
+    to { opacity: 0; pointer-events: none; }
+  }
+
+  #boot-lines { max-width: 600px; width: 90%; }
+  #boot-lines p {
+    opacity: 0;
+    color: var(--green-dim);
+    animation: lineIn 0.1s ease forwards;
+  }
+  #boot-lines p:nth-child(1)  { animation-delay: 0.1s; }
+  #boot-lines p:nth-child(2)  { animation-delay: 0.3s; }
+  #boot-lines p:nth-child(3)  { animation-delay: 0.6s; }
+  #boot-lines p:nth-child(4)  { animation-delay: 0.9s; }
+  #boot-lines p:nth-child(5)  { animation-delay: 1.2s; color: var(--cyan); }
+  #boot-lines p:nth-child(6)  { animation-delay: 1.5s; color: var(--green); }
+  #boot-lines p:nth-child(7)  { animation-delay: 1.8s; color: var(--yellow); }
+  #boot-lines p:nth-child(8)  { animation-delay: 2.1s; color: var(--green); }
+  #boot-lines p:nth-child(9)  { animation-delay: 2.5s; color: var(--cyan); font-size: 28px; }
+
+  @keyframes lineIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── MAIN LAYOUT ── */
+  #main { opacity: 0; animation: mainIn 0.8s ease 3.4s forwards; }
+  @keyframes mainIn { to { opacity: 1; } }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5,10,5,0.95);
+    border-bottom: 1px solid var(--green-dark);
+    backdrop-filter: blur(4px);
+    padding: 12px 0;
+  }
+
+  nav .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .nav-brand {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--cyan);
+  }
+
+  .nav-brand span { color: var(--green); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  nav ul li a {
+    color: var(--green-dim);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  nav ul li a:hover {
+    color: var(--green);
+    border-color: var(--green-dark);
+    background: rgba(0,255,65,0.05);
+    text-shadow: 0 0 6px var(--green);
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 1.2s step-end infinite;
+    margin-right: 6px;
+    box-shadow: 0 0 6px var(--green);
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── HERO ── */
+  #hero {
+    padding: 70px 0 50px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .hero-prompt {
+    color: var(--green-dim);
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .hero-prompt::before {
+    content: '$ ';
+    color: var(--cyan);
+  }
+
+  .hero-name {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 46px);
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(0,255,65,0.5), 0 0 40px rgba(0,255,65,0.2);
+    line-height: 1.1;
+    letter-spacing: 3px;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(12px, 1.5vw, 16px);
+    color: var(--cyan);
+    letter-spacing: 4px;
+    margin-top: 8px;
+    text-shadow: 0 0 10px var(--cyan);
+  }
+
+  .hero-desc {
+    margin-top: 24px;
+    color: var(--white);
+    font-size: 14px;
+    max-width: 600px;
+    line-height: 1.7;
+    opacity: 0.85;
+  }
+
+  .hero-desc::before {
+    content: '> ';
+    color: var(--green);
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border: 1px solid var(--green-dark);
+    color: var(--green-dim);
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .tag:hover {
+    background: rgba(0,255,65,0.08);
+    border-color: var(--green-dim);
+    color: var(--green);
+  }
+
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 200px;
+  }
+
+  .stat-box {
+    background: var(--panel);
+    border: 1px solid var(--green-dark);
+    padding: 14px 18px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--cyan);
+  }
+
+  .stat-num {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan);
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--green-dim);
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 10px; height: 18px;
+    background: var(--green);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section { padding: 50px 0; border-bottom: 1px solid var(--border); }
+
+  .sec-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .sec-header h2 {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    text-shadow: 0 0 8px var(--cyan);
+  }
+
+  .sec-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--green-dark), transparent);
+  }
+
+  .sec-prefix {
+    color: var(--green-dim);
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-item {
+    position: relative;
+    padding: 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .exp-item.yogosha::before { background: var(--yellow); }
+
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--cyan);
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .exp-role {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 1px;
+  }
+
+  .exp-company {
+    color: var(--cyan);
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  .exp-date {
+    font-size: 11px;
+    color: var(--yellow);
+    border: 1px solid rgba(255,230,0,0.2);
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    margin-top: 12px;
+  }
+
+  .exp-bullets li {
+    color: var(--white);
+    font-size: 13px;
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+    opacity: 0.85;
+  }
+
+  .exp-bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+  }
+
+  /* ── CERTS ── */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .cert-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .cert-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .cert-card:hover::after { transform: scaleX(1); }
+  .cert-card:hover { border-color: var(--green-dark); }
+
+  .cert-badge {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--cyan);
+    text-shadow: 0 0 12px var(--cyan);
+    letter-spacing: 2px;
+  }
+
+  .cert-id {
+    font-size: 11px;
+    color: var(--green-dim);
+    margin-top: 6px;
+  }
+
+  .cert-id span { color: var(--yellow); }
+
+  .cert-desc {
+    font-size: 11px;
+    color: var(--white);
+    margin-top: 8px;
+    opacity: 0.7;
+  }
+
+  /* ── ACKNOWLEDGEMENTS ── */
+  .ack-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .ack-badge {
+    padding: 6px 14px;
+    border: 1px solid var(--green-dark);
+    color: var(--green-dim);
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ack-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,255,65,0.06);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s;
+  }
+
+  .ack-badge:hover::before { transform: scaleX(1); }
+  .ack-badge:hover { color: var(--green); border-color: var(--green-dim); }
+
+  /* ── EDUCATION ── */
+  .edu-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+
+  .edu-item:hover { border-color: var(--green-dark); }
+
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--green);
+  }
+
+  .edu-degree {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 1px;
+  }
+
+  .edu-uni {
+    color: var(--cyan);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .edu-year {
+    font-size: 11px;
+    color: var(--yellow);
+    border: 1px solid rgba(255,230,0,0.2);
+    padding: 2px 10px;
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    border-bottom: none;
+    padding-bottom: 80px;
+  }
+
+  .contact-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-box::before {
+    content: '// ESTABLISH_CONNECTION.exe';
+    position: absolute;
+    top: 10px; right: 16px;
+    font-size: 10px;
+    color: var(--green-dark);
+    letter-spacing: 1px;
+  }
+
+  .contact-line {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .contact-key {
+    font-size: 11px;
+    color: var(--cyan);
+    min-width: 80px;
+    letter-spacing: 1px;
+  }
+
+  .contact-val {
+    color: var(--white);
+    font-size: 13px;
+  }
+
+  .contact-val a {
+    color: var(--green);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .contact-val a:hover {
+    color: var(--cyan);
+    text-shadow: 0 0 6px var(--cyan);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--green-dark);
+    letter-spacing: 2px;
+  }
+
+  footer span { color: var(--green-dim); }
+
+  /* ── TERMINAL WINDOW WRAPPER ── */
+  .terminal-window {
+    border: 1px solid var(--green-dark);
+    background: var(--panel);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    background: var(--green-dark);
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--green-dim);
+    letter-spacing: 1px;
+  }
+
+  .t-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .t-dot.red { background: var(--red); }
+  .t-dot.yellow { background: var(--yellow); }
+  .t-dot.green { background: var(--green); box-shadow: 0 0 4px var(--green); }
+
+  .terminal-body { padding: 20px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .animate-in {
+    opacity: 0;
+    animation: slideInLeft 0.5s ease forwards;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 700px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: row; flex-wrap: wrap; }
+    .stat-box { flex: 1; min-width: 130px; }
+    .nav-brand { font-size: 10px; }
+    nav ul li a { font-size: 10px; padding: 3px 7px; }
+  }
+
+  /* ── TOOLS ARSENAL ── */
+  .tools-categories { display: flex; flex-direction: column; gap: 20px; }
+
+  .tool-category-label {
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    border-left: 2px solid var(--cyan);
+    padding-left: 10px;
+  }
+
+  .tools-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tool-chip {
+    padding: 5px 13px;
+    border: 1px solid var(--green-dark);
+    color: var(--green-dim);
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-chip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,255,65,0.07);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s;
+  }
+
+  .tool-chip:hover::before { transform: scaleX(1); }
+  .tool-chip:hover { color: var(--green); border-color: var(--green-dim); }
+
+  .tool-chip.cyan { border-color: rgba(0,229,255,0.2); color: var(--cyan-dim); }
+  .tool-chip.cyan:hover { color: var(--cyan); border-color: var(--cyan-dim); }
+
+  /* ── PROJECTS ── */
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .project-card:hover { border-color: var(--green-dark); }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--yellow);
+  }
+
+  .project-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .project-name {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255,230,0,0.3);
+  }
+
+  .project-link {
+    font-size: 11px;
+    color: var(--cyan);
+    text-decoration: none;
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 2px 10px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .project-link:hover {
+    background: rgba(0,229,255,0.08);
+    border-color: var(--cyan-dim);
+    text-shadow: 0 0 6px var(--cyan);
+  }
+
+  .project-desc {
+    color: var(--white);
+    font-size: 12px;
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  .project-tag {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 6px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--green-dark);
+    color: var(--green-dim);
+    letter-spacing: 1px;
+  }
+
+  /* ── AWARDS ── */
+  .award-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 18px 22px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .award-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--yellow);
+  }
+
+  .award-item:hover { border-color: var(--green-dark); transform: translateX(3px); }
+
+  .award-icon {
+    font-size: 20px;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .award-body { flex: 1; }
+
+  .award-title {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 1px;
+  }
+
+  .award-sub {
+    font-size: 11px;
+    color: var(--white);
+    opacity: 0.65;
+    margin-top: 2px;
+  }
+
+  .award-badge {
+    font-size: 10px;
+    padding: 2px 10px;
+    border: 1px solid rgba(255,230,0,0.25);
+    color: var(--yellow);
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  /* Matrix rain bg */
+  #matrix-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    z-index: -1;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Matrix canvas -->
+<canvas id="matrix-canvas"></canvas>
+
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <div id="boot-lines">
+    <p>BIOS v2.4.1 ... OK</p>
+    <p>Loading security modules ... [████████████] 100%</p>
+    <p>Initializing VAPT engine ... OK</p>
+    <p>Authenticating operator credentials ...</p>
+    <p>[ IDENTITY VERIFIED ] → MD MAHMUDUL HASAN</p>
+    <p>[ ROLE ] → Engineer, Security Operations</p>
+    <p>[ STATUS ] → ACTIVE // EIC Limited</p>
+    <p>Mounting portfolio filesystem ... OK</p>
+    <p>SYSTEM ONLINE ▌</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main">
+
+  <!-- NAV -->
+  <nav>
+    <div class="inner">
+      <div class="nav-brand"><span class="status-dot"></span>0xmahmudul<span>::</span>Sec_Ops</div>
+      <ul>
+        <li><a href="#hero">~/home</a></li>
+        <li><a href="#experience">~/experience</a></li>
+        <li><a href="#arsenal">~/arsenal</a></li>
+        <li><a href="#projects">~/projects</a></li>
+        <li><a href="#awards">~/awards</a></li>
+        <li><a href="#certs">~/certs</a></li>
+        <li><a href="#education">~/education</a></li>
+        <li><a href="#ack">~/ack</a></li>
+        <li><a href="#contact">~/contact</a></li>
+        <li><a href="https://0xmahmudul.medium.com/" target="_blank" style="color:var(--cyan); border-color:rgba(0,229,255,0.3);">~/writeup ↗</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-prompt">whoami</div>
+          <h1 class="hero-name">MD MAHMUDUL<br>HASAN<span class="cursor"></span></h1>
+          <div class="hero-title">// SECURITY ENGINEER, RED TEAMER</div>
+          <p class="hero-desc">
+            Security engineer with 6+ years of hands-on experience in web, mobile, API, and infrastructure security. Currently leading offensive security assessments at EIC Limited and operating as a member of the Yogosha Strike Force — an invitation-only red team community. I find vulnerabilities, communicate the risk clearly, and make sure fixes actually happen.
+          </p>
+          <div class="hero-tags">
+            <span class="tag">VAPT</span>
+            <span class="tag">WEB APPLICATION SECURITY</span>
+            <span class="tag">MOBILE APPLICATION SECURITY</span>
+            <span class="tag">API SECURITY</span>
+            <span class="tag">CLOUD SECURITY</span>
+            <span class="tag">SERVER HARDENING</span>
+            <span class="tag">PCI DSS</span>
+            <span class="tag">DIGITAL FORENSICS</span>
+            <span class="tag">OSINT</span>
+            <span class="tag">RED HAT</span>
+            <span class="tag">CTF</span>
+            <span class="tag">BUG BOUNTY</span>
+            <span class="tag">IOT SECURITY</span>
+          </div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-box">
+            <div class="stat-num">6+</div>
+            <div class="stat-label">YEARS EXP</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">500+</div>
+            <div class="stat-label">VULNS FOUND</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">70+</div>
+            <div class="stat-label">ENTERPRISES</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">30+</div>
+            <div class="stat-label">HALL OF FAME</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">cat</span>
+        <h2>EXPERIENCE_LOG.SYS</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-bar">
+          <span class="t-dot red"></span>
+          <span class="t-dot yellow"></span>
+          <span class="t-dot green"></span>
+          <span style="margin-left:8px;">engineer@eic ~ experience</span>
+        </div>
+        <div class="terminal-body">
+
+          <!-- 1. EIC -->
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <div class="exp-role">ENGINEER, SECURITY OPERATIONS</div>
+                <div class="exp-company">@ EIC LIMITED &nbsp;|&nbsp; Dhaka, Bangladesh</div>
+              </div>
+              <div class="exp-date">NOV 2025 → PRESENT</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Led security testing for 40+ enterprises including Banks, Finance, HealthCare, Airlines and ISPs — uncovering high-risk gaps across attack surfaces.</li>
+              <li>Conducted API, Web, Cloud, Server, and Network penetration tests; delivered clear, actionable remediation guidance.</li>
+              <li>Assisted clients in achieving PCI DSS compliance through vulnerability reviews, pen tests, and network segmentation checks.</li>
+              <li>Collaborated cross-functionally to strengthen cybersecurity posture and enforce security best practices organization-wide.</li>
+              <li>Delivered offensive security assessments across web, mobile, API, and server environments for global clients.</li>
+            </ul>
+          </div>
+
+          <!-- 2. YOGOSHA -->
+          <div class="exp-item yogosha">
+            <div class="exp-header">
+              <div>
+                <div class="exp-role">RED TEAMER &nbsp;<span style="color:var(--green-dim); font-size:11px; font-family:var(--mono); font-weight:400;">// Bug Bounty</span></div>
+                <div class="exp-company">@ YOGOSHA STRIKE FORCE &nbsp;|&nbsp; Paris, France</div>
+              </div>
+              <div class="exp-date">JAN 2023 → PRESENT</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Member of Yogosha Strike Force — an invitation-only elite red team community of vetted security researchers operating on private bug bounty programs globally.</li>
+              <li>Conducted offensive security assessments across web, API, and mobile platforms for enterprise clients</li>
+              <li>Identified and responsibly disclosed critical vulnerabilities including authentication bypasses, IDOR, XSS, and information disclosure across multiple private programs.</li>
+              <li>Maintained a consistent track record of high-quality, high-impact findings with actionable remediation — sustaining a 100% resolution rate across all submissions.</li>
+            </ul>
+            <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:10px; padding:2px 10px; border:1px solid rgba(0,229,255,0.2); color:var(--cyan-dim); letter-spacing:1px;">PRIVATE PROGRAMS</span>
+              <span style="font-size:10px; padding:2px 10px; border:1px solid rgba(0,229,255,0.2); color:var(--cyan-dim); letter-spacing:1px;">INVITATION-ONLY</span>
+              <span style="font-size:10px; padding:2px 10px; border:1px solid rgba(0,229,255,0.2); color:var(--cyan-dim); letter-spacing:1px;">ELITE RED TEAM</span>
+            </div>
+          </div>
+
+          <!-- 3. QNAP -->
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <div class="exp-role">SECURITY ENGINEER (REMOTE)</div>
+                <div class="exp-company">@ QNAP INC. &nbsp;|&nbsp; Taiwan</div>
+              </div>
+              <div class="exp-date">NOV 2019 → FEB 2022</div>
+            </div>
+            <ul class="exp-bullets">
+              <li>Identified and responsibly disclosed 150+ security vulnerabilities across QNAP products and infrastructure.</li>
+              <li>Provided clear, actionable remediation guidance to internal engineering and security teams.</li>
+              <li>Contributed to improving product security posture through systematic and thorough vulnerability research.</li>
+              <li>Delivered a remote workshop to QNAP's internal security team, sharing offensive research methodology and findings.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARSENAL -->
+  <section class="section" id="arsenal">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">which</span>
+        <h2>ARSENAL.SYS</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="tools-categories">
+
+        <div>
+          <div class="tool-category-label">// WEB &amp; API TESTING</div>
+          <div class="tools-wrap">
+            <span class="tool-chip">Burp Suite</span>
+            <span class="tool-chip">sqlmap</span>
+            <span class="tool-chip">ffuf</span>
+            <span class="tool-chip">Feroxbuster</span>
+            <span class="tool-chip">Nikto</span>
+            <span class="tool-chip">CyberChef</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="tool-category-label">// NETWORK &amp; RECONNAISSANCE</div>
+          <div class="tools-wrap">
+            <span class="tool-chip">Nmap</span>
+            <span class="tool-chip">Wireshark</span>
+            <span class="tool-chip">Chisel</span>
+            <span class="tool-chip">OSINT Tools</span>
+            <span class="tool-chip">Shodan</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="tool-category-label">// EXPLOITATION &amp; POST-EXPLOITATION</div>
+          <div class="tools-wrap">
+            <span class="tool-chip">Metasploit</span>
+            <span class="tool-chip">Evil-WinRM</span>
+            <span class="tool-chip">CrackMapExec</span>
+            <span class="tool-chip">BloodHound</span>
+            <span class="tool-chip">LinPEAS / WinPEAS</span>
+            <span class="tool-chip">GTFOBins</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="tool-category-label">// CREDENTIAL &amp; FORENSICS</div>
+          <div class="tools-wrap">
+            <span class="tool-chip">John the Ripper</span>
+            <span class="tool-chip">Hashcat</span>
+            <span class="tool-chip">CyberChef</span>
+            <span class="tool-chip">Autopsy</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="tool-category-label">// Professional</div>
+          <div class="tools-wrap">
+            <span class="tool-chip">Qualys</span>
+            <span class="tool-chip">Nessus</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">git log</span>
+        <h2>OPEN_SOURCE.BUILD</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <p style="font-size:12px; color:var(--green-dim); margin-bottom:22px; letter-spacing:1px;">
+        // Tools built for the community. Open source. Free to use.
+      </p>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-name">⬡ WebSecure360</div>
+          <a href="https://github.com/mahmudul0x1/web" target="_blank" class="project-link">→ github.com</a>
+        </div>
+        <div class="project-desc">
+          Easy Web Recon — a lightweight reconnaissance tool designed to simplify the early phase of web application security testing. Automates surface-level information gathering so testers can focus on what matters: finding vulnerabilities.
+        </div>
+        <span class="project-tag">RECON</span>
+        <span class="project-tag">WEB SECURITY</span>
+        <span class="project-tag">OPEN SOURCE</span>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-name">⬡ k9droid</div>
+          <a href="#" target="_blank" class="project-link">→ github.com</a>
+        </div>
+        <div class="project-desc">
+          Android APK static analysis tool for extracting URIs, endpoints, and hardcoded secrets from mobile applications. Built to aid mobile security assessments and bug bounty hunting on Android targets.
+        </div>
+        <span class="project-tag">MOBILE SECURITY</span>
+        <span class="project-tag">ANDROID</span>
+        <span class="project-tag">APK ANALYSIS</span>
+        <span class="project-tag">BUG BOUNTY</span>
+      </div>
+
+      <div class="project-card">
+        <div class="project-top">
+          <div class="project-name">⬡ Google Dork Tool</div>
+          <a href="#" target="_blank" class="project-link">→ github.com</a>
+        </div>
+        <div class="project-desc">
+          A web-based Google Dorking utility that makes advanced search operators accessible to everyone — security researchers, bug bounty hunters, and OSINT analysts alike. Instead of manually crafting complex dork queries, users can select targets, filter types, and parameters through a clean interface and instantly generate precision search strings. Designed to speed up the reconnaissance phase and surface exposed assets, sensitive files, and misconfigured endpoints that standard searches miss.
+        </div>
+        <span class="project-tag">OSINT</span>
+        <span class="project-tag">RECON</span>
+        <span class="project-tag">GOOGLE DORK</span>
+        <span class="project-tag">BUG BOUNTY</span>
+        <span class="project-tag">COMMUNITY TOOL</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AWARDS & COMMUNITY -->
+  <section class="section" id="awards">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">trophy</span>
+        <h2>ACHIEVEMENTS.DAT</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🏆</div>
+        <div class="award-body">
+          <div class="award-title">KASPERSKY CYBER SECURITY CHALLENGE 2019</div>
+          <div class="award-sub">National cybersecurity competition — outperformed competing teams across all challenge categories</div>
+        </div>
+        <div class="award-badge">CHAMPION</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">⚡</div>
+        <div class="award-body">
+          <div class="award-title">DAFFODIL CYBER SECURITY CLUB</div>
+          <div class="award-sub">Led technical workshops, awareness sessions &amp; the DIU Cyber Security Contest — building a campus-wide security culture</div>
+        </div>
+        <div class="award-badge">LEAD EXECUTIVE · 2022</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🚩</div>
+        <div class="award-body">
+          <div class="award-title">CTF BD 2023</div>
+          <div class="award-sub">Contributed to building and running Capture The Flag competitions for the Bangladesh security community</div>
+        </div>
+        <div class="award-badge">ORGANIZER</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🎯</div>
+        <div class="award-body">
+          <div class="award-title">BUG HUNT BD 2023 – 2024</div>
+          <div class="award-sub">Organized a national-level bug bounty challenge to encourage responsible disclosure among emerging security researchers</div>
+        </div>
+        <div class="award-badge">ORGANIZER</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🛡</div>
+        <div class="award-body">
+          <div class="award-title">PHOENIX SUMMIT 2024 – 2025</div>
+          <div class="award-sub">Part of the organizing committee for one of Bangladesh's premier cybersecurity summits</div>
+        </div>
+        <div class="award-badge">ORGANIZER</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🎤</div>
+        <div class="award-body">
+          <div class="award-title">Daffodil, Girls Programming Club</div>
+          <div class="award-sub">3 days Webinar about Cyber Security Awarness</div>
+        </div>
+        <div class="award-badge">SPEAKER</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">🏛</div>
+        <div class="award-body">
+          <div class="award-title">Bangladesh University</div>
+          <div class="award-sub">Day long seminar on Cyber Security Awarness</div>
+        </div>
+        <div class="award-badge">SPEAKER</div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-icon">💡</div>
+        <div class="award-body">
+          <div class="award-title">UY LAB, Mohakhali, Dhaka</div>
+          <div class="award-sub">Day long seminar on Cyber Security Awarness</div>
+        </div>
+        <div class="award-badge">SPEAKER</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section" id="certs">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">verify</span>
+        <h2>CERTIFICATIONS.SIG</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="cert-grid">
+        <div class="cert-card">
+          <div class="cert-badge">RHCE</div>
+          <div class="cert-id">ID: <span>220-171-276</span></div>
+          <div class="cert-desc">Red Hat Certified Engineer</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-badge">RHCSA</div>
+          <div class="cert-id">ID: <span>220-171-276</span></div>
+          <div class="cert-desc">Red Hat Certified System Administrator</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section" id="education">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">grep -r</span>
+        <h2>EDUCATION.LOG</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">M.Sc. in Information Technology (IIT)</div>
+          <div class="edu-uni">Jahangirnagar University — Dhaka, Bangladesh</div>
+        </div>
+        <div class="edu-year">JULY 2026</div>
+      </div>
+
+      <div class="edu-item">
+        <div>
+          <div class="edu-degree">B.Sc. in Computing & Information System (CIS)</div>
+          <div class="edu-uni">Daffodil International University — Dhaka, Bangladesh</div>
+        </div>
+        <div class="edu-year">OCT 2024</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACKNOWLEDGEMENTS -->
+  <section class="section" id="ack">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">echo</span>
+        <h2>HALL_OF_FAME.TXT</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <p style="font-size:12px; color:var(--green-dim); margin-bottom:20px; letter-spacing:1px;">
+        // Acknowledged by the following organizations for responsible security disclosures:
+      </p>
+
+      <div class="ack-grid">
+        <span class="ack-badge">Microsoft</span>
+        <span class="ack-badge">Unicef</span>
+        <span class="ack-badge">QNAP</span>
+        <span class="ack-badge">Zerocopter</span>
+        <span class="ack-badge">Interserver</span>
+        <span class="ack-badge">Eufy</span>
+        <span class="ack-badge">Reolink</span>
+        <span class="ack-badge">Stackry</span>
+        <span class="ack-badge">Hubspire</span>
+        <span class="ack-badge">Skyvector</span>
+        <span class="ack-badge">Ripen</span>
+        <span class="ack-badge">Wondercise</span>
+        <span class="ack-badge">Vanila.io</span>
+        <span class="ack-badge">Duda.co</span>
+        <span class="ack-badge">2key</span>
+        <span class="ack-badge">Foxit Software</span>
+        <span class="ack-badge">Neo4j</span>
+        <span class="ack-badge">Aurigasec</span>
+        <span class="ack-badge">Yolt</span>
+        <span class="ack-badge">Mycast</span>
+        <span class="ack-badge">More adding soon...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="sec-header">
+        <span class="sec-prefix">ping</span>
+        <h2>CONTACT.INIT</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="contact-box">
+        <div class="contact-line">
+          <span class="contact-key">EMAIL</span>
+          <span class="contact-val"><a href="/cdn-cgi/l/email-protection#701d11181d0514051c4244084730171d11191c5e131f1d"><span class="__cf_email__" data-cfemail="88e5e9e0e5fdecfde4babcf0bfc8efe5e9e1e4a6ebe7e5">[email&#160;protected]</span></a></span>
+        </div>
+        <div class="contact-line">
+          <span class="contact-key">LOCATION</span>
+          <span class="contact-val" style="color:var(--white); opacity:0.8;">Dhaka, Bangladesh</span>
+        </div>
+        <div class="contact-line">
+          <span class="contact-key">STATUS</span>
+          <span class="contact-val">
+            <span class="status-dot"></span>
+            <span style="color:var(--green);">AVAILABLE FOR ENGAGEMENTS</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /main -->
+
+<footer>
+  <span>MD MAHMUDUL HASAN</span> // SECURITY ENGINEER // &nbsp;|&nbsp; © 2026
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Matrix rain effect
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+const fontSize = 14;
+let cols = Math.floor(canvas.width / fontSize);
+let drops = Array(cols).fill(1);
+
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(5, 10, 5, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00ff41';
+  ctx.font = fontSize + 'px Share Tech Mono';
+
+  for (let i = 0; i < drops.length; i++) {
+    const char = chars[Math.floor(Math.random() * chars.length)];
+    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+
+setInterval(drawMatrix, 50);
+
