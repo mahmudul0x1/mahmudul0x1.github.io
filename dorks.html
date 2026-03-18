@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DORK.OPS — Google Dork Intelligence Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0a0c10;
+  --bg2:       #0e1117;
+  --bg3:       #131720;
+  --panel:     #111520;
+  --amber:     #f59e0b;
+  --amber-dim: #b37a09;
+  --amber-glow:rgba(245,158,11,0.15);
+  --amber-line:rgba(245,158,11,0.2);
+  --red:       #ef4444;
+  --green:     #22c55e;
+  --blue:      #3b82f6;
+  --text:      #c9d1d9;
+  --text-dim:  #6e7681;
+  --border:    #1e2530;
+  --border2:   #2a3441;
+  --mono:      'JetBrains Mono', monospace;
+  --display:   'Rajdhani', sans-serif;
+  --hero:      'Bebas Neue', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  cursor: default;
+  min-height: 100vh;
+}
+
+/* ── GRID BG ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245,158,11,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,158,11,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* corner accent lines */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 300px; height: 300px;
+  background:
+    radial-gradient(ellipse at top left, rgba(245,158,11,0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--amber-dim); }
+
+/* ── HEADER ── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(10,12,16,0.97);
+  border-bottom: 1px solid var(--border2);
+  backdrop-filter: blur(8px);
+  padding: 0 28px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  font-family: var(--hero);
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: var(--amber);
+  text-shadow: 0 0 16px rgba(245,158,11,0.5);
+  white-space: nowrap;
+}
+
+.logo span { color: var(--text-dim); font-size: 13px; font-family: var(--mono); letter-spacing: 1px; margin-left: 10px; vertical-align: middle; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 9px;
+  border: 1px solid var(--amber-line);
+  color: var(--amber-dim);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.by-line {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.by-line a { color: var(--amber); text-decoration: none; }
+.by-line a:hover { text-shadow: 0 0 6px var(--amber); }
+
+/* ── MAIN WRAPPER ── */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── SEARCH BAR ── */
+.search-block {
+  grid-column: 1 / -1;
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  padding: 22px 26px;
+  position: relative;
+  overflow: hidden;
+}
+
+.search-block::before {
+  content: 'TARGET_ACQUISITION';
+  position: absolute;
+  top: 8px; right: 16px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--amber-dim);
+  letter-spacing: 2px;
+  opacity: 0.5;
+}
+
+.search-block::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--amber);
+}
+
+.search-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.search-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.domain-input {
+  flex: 1;
+  min-width: 240px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  padding: 10px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.domain-input:focus { border-color: var(--amber); }
+.domain-input::placeholder { color: var(--text-dim); }
+
+.btn-execute {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  font-family: var(--hero);
+  font-size: 16px;
+  letter-spacing: 3px;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-execute:hover { background: #fbbf24; box-shadow: 0 0 16px rgba(245,158,11,0.4); }
+
+.btn-clear {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border2);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+
+.btn-clear:hover { color: var(--red); border-color: var(--red); }
+
+.search-hint {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.search-hint span { color: var(--amber-dim); }
+
+/* ── TABS ── */
+.tabs-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: -4px;
+}
+
+.tab-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 13px;
+  border: 1px solid var(--border2);
+  background: var(--panel);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+
+.tab-btn:hover { color: var(--amber); border-color: var(--amber-line); }
+.tab-btn.active { background: var(--amber); color: #000; border-color: var(--amber); font-weight: 700; }
+
+.count-chip {
+  display: inline-block;
+  background: rgba(245,158,11,0.15);
+  color: var(--amber-dim);
+  font-size: 9px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  border-radius: 2px;
+}
+
+/* ── DORKS MAIN COLUMN ── */
+.dorks-col { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── CATEGORY BLOCK ── */
+.cat-block {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  gap: 10px;
+}
+
+.cat-header:hover { background: rgba(245,158,11,0.04); }
+
+.cat-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cat-icon {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.cat-name {
+  font-family: var(--hero);
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--amber);
+}
+
+.cat-desc {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+}
+
+.cat-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber-dim);
+  border: 1px solid var(--amber-line);
+  padding: 2px 8px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.cat-toggle {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-family: var(--mono);
+  transition: transform 0.2s;
+  margin-left: 8px;
+}
+
+.cat-block.collapsed .cat-toggle { transform: rotate(-90deg); }
+
+.cat-body {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  overflow: hidden;
+  max-height: 2000px;
+  transition: max-height 0.3s ease;
+}
+
+@media (max-width: 700px) {
+  .cat-body { grid-template-columns: 1fr; }
+}
+
+.cat-block.collapsed .cat-body { max-height: 0; padding: 0 14px; }
+
+/* ── DORK ROW ── */
+.dork-row {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.dork-row:hover { border-color: var(--border2); }
+
+.dork-row.full-width { grid-column: 1 / -1; }
+
+.dork-text {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.dork-text .domain-placeholder {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.dork-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.btn-copy, .btn-search {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 4px 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.btn-copy {
+  background: var(--bg3);
+  color: var(--text-dim);
+  border: 1px solid var(--border2);
+}
+
+.btn-copy:hover { color: var(--amber); border-color: var(--amber-line); }
+.btn-copy.copied { color: var(--green); border-color: rgba(34,197,94,0.3); }
+
+.btn-search {
+  background: rgba(245,158,11,0.1);
+  color: var(--amber-dim);
+  border: 1px solid var(--amber-line);
+}
+
+.btn-search:hover { background: rgba(245,158,11,0.2); color: var(--amber); }
+
+/* ── SIDEBAR ── */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+.side-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.side-header {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.side-header span {
+  font-family: var(--hero);
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--amber);
+}
+
+.side-body { padding: 12px; }
+
+.ext-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+}
+
+.ext-link:hover {
+  color: var(--amber);
+  background: var(--amber-glow);
+  border-color: var(--amber-line);
+}
+
+.ext-link::before {
+  content: '↗';
+  color: var(--amber-dim);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* stats panel */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.stat-row:last-child { border-bottom: none; }
+.stat-key { color: var(--text-dim); letter-spacing: 0.5px; }
+.stat-val { color: var(--amber); font-weight: 700; }
+
+/* copy all btn */
+.btn-copy-all {
+  width: 100%;
+  background: transparent;
+  color: var(--amber);
+  border: 1px solid var(--amber-line);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.btn-copy-all:hover { background: var(--amber-glow); }
+
+/* domain missing warning */
+.warning-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+.warning-bar.show { display: flex; }
+
+/* no results */
+.no-results {
+  display: none;
+  text-align: center;
+  padding: 40px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+  font-size: 13px;
+  border: 1px dashed var(--border2);
+}
+
+.no-results.show { display: block; }
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg3);
+  border: 1px solid var(--amber-line);
+  color: var(--amber);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 18px;
+  letter-spacing: 1px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.25s;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--bg2);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+footer a { color: var(--amber-dim); text-decoration: none; }
+footer a:hover { color: var(--amber); }
+
+@media (max-width: 900px) {
+  .wrapper { grid-template-columns: 1fr; }
+  .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+}
+
+@media (max-width: 600px) {
+  .sidebar { grid-template-columns: 1fr; }
+  header { padding: 0 14px; }
+  .wrapper { padding: 16px 12px 40px; }
+  .logo span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">DORK.OPS <span>// RECON INTELLIGENCE TOOL</span></div>
+  <div class="header-right">
+    <div class="badge">BUG BOUNTY · PENTEST · OSINT</div>
+    <div class="by-line">by <a href="https://mahmudul0x1.github.io" target="_blank">Mahmudul</a></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="wrapper">
+
+  <!-- SEARCH -->
+  <div class="search-block">
+    <div class="search-label">// TARGET DOMAIN</div>
+    <div class="search-row">
+      <input type="text" class="domain-input" id="domainInput" placeholder="example.com" autocomplete="off" spellcheck="false">
+      <button class="btn-execute" onclick="loadDomain()">EXECUTE</button>
+      <button class="btn-clear" onclick="clearDomain()">CLEAR</button>
+    </div>
+    <div class="search-hint">TIP: Enter domain without <span>https://</span> or <span>www</span> — e.g. <span>target.com</span></div>
+    <div class="warning-bar" id="warningBar">⚠ &nbsp;TARGET DOMAIN REQUIRED — enter a domain above to generate dorks</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-row" id="tabsRow">
+    <button class="tab-btn active" onclick="filterCat('all', this)">ALL <span class="count-chip" id="countAll">0</span></button>
+    <button class="tab-btn" onclick="filterCat('admin', this)">ADMIN</button>
+    <button class="tab-btn" onclick="filterCat('files', this)">SENSITIVE FILES</button>
+    <button class="tab-btn" onclick="filterCat('sqli', this)">SQL INJECTION</button>
+    <button class="tab-btn" onclick="filterCat('xss', this)">XSS</button>
+    <button class="tab-btn" onclick="filterCat('redirect', this)">OPEN REDIRECT</button>
+    <button class="tab-btn" onclick="filterCat('lfi', this)">LFI</button>
+    <button class="tab-btn" onclick="filterCat('ssrf', this)">SSRF</button>
+    <button class="tab-btn" onclick="filterCat('subs', this)">SUBDOMAINS</button>
+    <button class="tab-btn" onclick="filterCat('juicy', this)">JUICY INFO</button>
+    <button class="tab-btn" onclick="filterCat('api', this)">API / TOKENS</button>
+    <button class="tab-btn" onclick="filterCat('cloud', this)">CLOUD</button>
+    <button class="tab-btn" onclick="filterCat('cms', this)">CMS</button>
+    <button class="tab-btn" onclick="filterCat('git', this)">GIT EXPOSURE</button>
+    <button class="tab-btn" onclick="filterCat('bb', this)">BUG BOUNTY</button>
+  </div>
+
+  <!-- DORKS COLUMN -->
+  <div class="dorks-col" id="dorksCol">
+    <!-- rendered by JS -->
+    <div class="no-results" id="noResults">No categories match the selected filter.</div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- STATS -->
+    <div class="side-panel">
+      <div class="side-header"><span>INTEL STATS</span></div>
+      <div class="side-body">
+        <div class="stat-row"><span class="stat-key">Total Dorks</span><span class="stat-val" id="statTotal">0</span></div>
+        <div class="stat-row"><span class="stat-key">Categories</span><span class="stat-val">15</span></div>
+        <div class="stat-row"><span class="stat-key">Target</span><span class="stat-val" id="statDomain">—</span></div>
+        <div class="stat-row"><span class="stat-key">Mode</span><span class="stat-val">GOOGLE</span></div>
+        <button class="btn-copy-all" onclick="copyAllDorks()">⎘ COPY ALL DORKS</button>
+      </div>
+    </div>
+
+    <!-- EXTERNAL TOOLS -->
+    <div class="side-panel">
+      <div class="side-header"><span>EXTERNAL TOOLS</span></div>
+      <div class="side-body">
+        <a href="https://requestbin.net/" target="_blank" class="ext-link">DNSBin (Request Interceptor)</a>
+        <a href="https://hunter.io/" target="_blank" class="ext-link">Hunter.io</a>
+        <a href="https://app.interactsh.com/" target="_blank" class="ext-link">Interactsh (OOB)</a>
+        <a href="https://dnsdumpster.com/" target="_blank" class="ext-link">DNS Dumpster</a>
+        <a href="https://hackertarget.com/dns-lookup/" target="_blank" class="ext-link">HackerTarget DNS</a>
+        <a href="https://gchq.github.io/CyberChef/" target="_blank" class="ext-link">CyberChef</a>
+        <a href="https://regex101.com/" target="_blank" class="ext-link">Regex101</a>
+        <a href="https://jwt.io/" target="_blank" class="ext-link">JWT.io</a>
+        <a href="https://breachdirectory.com/" target="_blank" class="ext-link">Breach Directory</a>
+        <a href="https://whoisrequest.com/history/" target="_blank" class="ext-link">Domain History</a>
+        <a href="https://publicwww.com/" target="_blank" class="ext-link">Source Code Search</a>
+        <a href="https://developers.facebook.com/tools/ct/" target="_blank" class="ext-link">FB Cert Transparency</a>
+        <a href="https://shodan.io/" target="_blank" class="ext-link">Shodan</a>
+        <a href="https://crt.sh/" target="_blank" class="ext-link">crt.sh (Cert Logs)</a>
+        <a href="https://www.virustotal.com/" target="_blank" class="ext-link">VirusTotal</a>
+        <a href="https://dorksearch.com/" target="_blank" class="ext-link">DorkSearch</a>
+        <a href="https://www.exploit-db.com/google-hacking-database" target="_blank" class="ext-link">Google Hacking DB</a>
+        <a href="https://viz.greynoise.io/" target="_blank" class="ext-link">GreyNoise</a>
+      </div>
+    </div>
+
+    <!-- QUICK SEARCH -->
+    <div class="side-panel">
+      <div class="side-header"><span>QUICK SEARCH</span></div>
+      <div class="side-body">
+        <a href="#" onclick="quickSearch('admin'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">Admin Panels</a>
+        <a href="#" onclick="quickSearch('files'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">Sensitive Files</a>
+        <a href="#" onclick="quickSearch('git'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">Git Exposure</a>
+        <a href="#" onclick="quickSearch('api'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">API Keys / Tokens</a>
+        <a href="#" onclick="quickSearch('cloud'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">Cloud / S3</a>
+        <a href="#" onclick="quickSearch('subs'); return false;" class="ext-link" style="border-color:rgba(245,158,11,0.15);">Subdomains</a>
+      </div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+</div><!-- /wrapper -->
+
+<footer>
+  <span>DORK.OPS // GOOGLE DORK INTELLIGENCE TOOL — FOR AUTHORIZED SECURITY RESEARCH ONLY</span>
+  <span>built by <a href="https://mahmudul0x1.github.io" target="_blank">Md Mahmudul Hasan</a> · <a href="mailto:mahmudul24x7@gmail.com">mahmudul24x7@gmail.com</a></span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DORK DATA ──
+const CATEGORIES = [
+  {
+    id: 'admin',
+    icon: '🔐',
+    name: 'ADMIN & LOGIN',
+    desc: 'Admin panels, login pages, dashboards',
+    dorks: [
+      'site:{d} inurl:admin',
+      'site:{d} inurl:login',
+      'site:{d} inurl:dashboard',
+      'site:{d} inurl:portal',
+      'site:{d} intitle:"admin panel"',
+      'site:{d} inurl:administrator',
+      'site:{d} inurl:control-panel',
+      'site:{d} inurl:cpanel',
+      'site:{d} inurl:webadmin',
+      'site:{d} inurl:manage',
+      'site:{d} inurl:management',
+      'site:{d} inurl:signin',
+      'site:{d} inurl:account/login',
+      'site:{d} inurl:user/login',
+    ]
+  },
+  {
+    id: 'files',
+    icon: '📂',
+    name: 'SENSITIVE FILES',
+    desc: 'Exposed configs, backups, credentials',
+    dorks: [
+      'site:{d} ext:log',
+      'site:{d} ext:env',
+      'site:{d} ext:bak',
+      'site:{d} ext:backup',
+      'site:{d} ext:sql',
+      'site:{d} ext:conf',
+      'site:{d} ext:config',
+      'site:{d} ext:xml',
+      'site:{d} ext:json',
+      'site:{d} ext:yaml | ext:yml',
+      'site:{d} ext:txt "password"',
+      'site:{d} ext:htpasswd | ext:htaccess',
+      'site:{d} ext:ini',
+      'site:{d} ext:sh',
+      'site:{d} ext:swp',
+      'site:{d} ext:old | ext:orig',
+    ]
+  },
+  {
+    id: 'sqli',
+    icon: '💉',
+    name: 'SQL INJECTION',
+    desc: 'Parameters likely vulnerable to SQLi',
+    dorks: [
+      'site:{d} inurl:id=',
+      'site:{d} inurl:?id=',
+      'site:{d} inurl:page=',
+      'site:{d} inurl:category=',
+      'site:{d} inurl:item=',
+      'site:{d} inurl:product=',
+      'site:{d} inurl:news=',
+      'site:{d} inurl:type=',
+      'site:{d} inurl:user=',
+      'site:{d} inurl:view=',
+      'site:{d} inurl:article=',
+      'site:{d} inurl:show=',
+      'site:{d} "sql syntax near" | "syntax error has occurred"',
+    ]
+  },
+  {
+    id: 'xss',
+    icon: '⚡',
+    name: 'XSS',
+    desc: 'Reflected input parameters for XSS testing',
+    dorks: [
+      'site:{d} inurl:search=',
+      'site:{d} inurl:q=',
+      'site:{d} inurl:query=',
+      'site:{d} inurl:keyword=',
+      'site:{d} inurl:s=',
+      'site:{d} inurl:name=',
+      'site:{d} inurl:input=',
+      'site:{d} inurl:term=',
+      'site:{d} inurl:k=',
+      'site:{d} inurl:text=',
+    ]
+  },
+  {
+    id: 'redirect',
+    icon: '↪',
+    name: 'OPEN REDIRECT',
+    desc: 'URL redirection parameters',
+    dorks: [
+      'site:{d} inurl:redirect=',
+      'site:{d} inurl:url=',
+      'site:{d} inurl:return=',
+      'site:{d} inurl:next=',
+      'site:{d} inurl:redir=',
+      'site:{d} inurl:r=',
+      'site:{d} inurl:goto=',
+      'site:{d} inurl:dest=',
+      'site:{d} inurl:destination=',
+      'site:{d} inurl:continue=',
+      'site:{d} inurl:forward=',
+      'site:{d} inurl:target= http',
+    ]
+  },
+  {
+    id: 'lfi',
+    icon: '📁',
+    name: 'LFI / PATH TRAVERSAL',
+    desc: 'Local file inclusion attack vectors',
+    dorks: [
+      'site:{d} inurl:file=',
+      'site:{d} inurl:path=',
+      'site:{d} inurl:include=',
+      'site:{d} inurl:template=',
+      'site:{d} inurl:folder=',
+      'site:{d} inurl:dir=',
+      'site:{d} inurl:document=',
+      'site:{d} inurl:pg=',
+      'site:{d} inurl:style=',
+      'site:{d} inurl:load=',
+      'site:{d} inurl:read=',
+    ]
+  },
+  {
+    id: 'ssrf',
+    icon: '🌐',
+    name: 'SSRF',
+    desc: 'Server-side request forgery entry points',
+    dorks: [
+      'site:{d} inurl:url= https://',
+      'site:{d} inurl:fetch=',
+      'site:{d} inurl:proxy=',
+      'site:{d} inurl:source=',
+      'site:{d} inurl:endpoint=',
+      'site:{d} inurl:uri=',
+      'site:{d} inurl:fetch= http',
+      'site:{d} inurl:callback=',
+      'site:{d} inurl:webhook=',
+      'site:{d} inurl:remote=',
+      'site:{d} inurl:request=',
+    ]
+  },
+  {
+    id: 'subs',
+    icon: '🌍',
+    name: 'SUBDOMAINS',
+    desc: 'Subdomain enumeration via Google',
+    dorks: [
+      'site:*.{d}',
+      'site:*.*.{d}',
+      'site:{d} -www',
+      'site:{d} -www -mail',
+      'inurl:{d} site:pastebin.com',
+      '"{d}" site:github.com',
+      '"{d}" site:shodan.io',
+      'site:{d} inurl:dev | inurl:staging | inurl:test',
+      'site:{d} inurl:api',
+      'site:{d} inurl:beta | inurl:alpha',
+      'site:{d} inurl:internal | inurl:corp',
+    ]
+  },
+  {
+    id: 'juicy',
+    icon: '🗂',
+    name: 'JUICY INFO',
+    desc: 'Directory listings, errors, exposed data',
+    dorks: [
+      'site:{d} intitle:"index of"',
+      'site:{d} intitle:"index of" "parent directory"',
+      'site:{d} intitle:"directory listing"',
+      'site:{d} intitle:"phpinfo()"',
+      'site:{d} intitle:"Test Page"',
+      'site:{d} intext:"sql syntax near"',
+      'site:{d} "error" inurl:php',
+      'site:{d} intitle:"Apache Tomcat"',
+      'site:{d} intext:"Stack trace"',
+      'site:{d} intext:"Warning: mysql_"',
+      'site:{d} intext:"Uncaught exception"',
+      'site:{d} intext:"Fatal error"',
+      'site:{d} intext:"DB_PASSWORD"',
+    ]
+  },
+  {
+    id: 'api',
+    icon: '🔑',
+    name: 'API KEYS & TOKENS',
+    desc: 'Exposed credentials, keys, secrets',
+    dorks: [
+      'site:{d} inurl:api_key',
+      'site:{d} inurl:apikey',
+      'site:{d} inurl:token',
+      'site:{d} inurl:api_token',
+      'site:{d} inurl:access_token',
+      'site:{d} inurl:auth_token',
+      'site:{d} inurl:secret',
+      'site:{d} ext:json inurl:api',
+      'site:{d} "api_key" | "api_secret"',
+      'site:{d} "client_secret"',
+      'site:{d} "bearer" inurl:api',
+      'site:{d} inurl:oauth',
+      'site:{d} intext:"Authorization: Bearer"',
+    ]
+  },
+  {
+    id: 'cloud',
+    icon: '☁',
+    name: 'CLOUD / S3',
+    desc: 'Cloud storage, AWS, Azure, GCP exposure',
+    dorks: [
+      'site:{d} inurl:s3.amazonaws.com',
+      'site:s3.amazonaws.com "{d}"',
+      'site:blob.core.windows.net "{d}"',
+      'site:storage.googleapis.com "{d}"',
+      'site:{d} inurl:bucket',
+      'site:{d} ext:xml "AmazonS3"',
+      '"{d}" site:s3.amazonaws.com',
+      'site:{d} inurl:cloudfront',
+      'site:{d} inurl:azure',
+      'site:{d} inurl:.r2.dev',
+    ]
+  },
+  {
+    id: 'cms',
+    icon: '🛠',
+    name: 'CMS & FRAMEWORKS',
+    desc: 'WordPress, Joomla, Drupal, Magento',
+    dorks: [
+      'site:{d} inurl:wp-admin',
+      'site:{d} inurl:wp-login.php',
+      'site:{d} inurl:wp-content',
+      'site:{d} inurl:wp-json/wp/v2/users',
+      'site:{d} inurl:joomla',
+      'site:{d} inurl:administrator/index.php',
+      'site:{d} inurl:drupal',
+      'site:{d} inurl:sites/default',
+      'site:{d} inurl:Magento',
+      'site:{d} inurl:index.php?option=com_',
+      'site:{d} inurl:phpmyadmin',
+      'site:{d} intitle:"Powered by WordPress"',
+    ]
+  },
+  {
+    id: 'git',
+    icon: '🐙',
+    name: 'GIT EXPOSURE',
+    desc: 'Code leaks, credentials in repos',
+    dorks: [
+      'site:{d} inurl:.git',
+      '"{d}" site:github.com',
+      '"{d}" site:gitlab.com',
+      '"{d}" site:bitbucket.org',
+      '"{d}" site:pastebin.com',
+      '"{d}" "password" site:github.com',
+      '"{d}" "api_key" site:github.com',
+      '"{d}" ".env" site:github.com',
+      '"{d}" "secret" site:github.com',
+      '"{d}" "token" site:github.com',
+      '"{d}" "private_key" site:github.com',
+    ]
+  },
+  {
+    id: 'bb',
+    icon: '🎯',
+    name: 'BUG BOUNTY RECON',
+    desc: 'Disclosure programs, scope recon',
+    dorks: [
+      'site:{d} "bug bounty"',
+      'site:{d} "responsible disclosure"',
+      'site:{d} inurl:security.txt',
+      'site:{d} "hall of fame"',
+      'site:{d} inurl:bugbounty',
+      'site:{d} inurl:.well-known/security.txt',
+      'site:{d} inurl:disclosure',
+      '"{d}" "bug bounty" site:hackerone.com',
+      '"{d}" site:bugcrowd.com',
+      '"{d}" site:yogosha.com',
+      '"{d}" "vulnerability"',
+    ]
+  },
+];
+
+// ── STATE ──
+let currentDomain = '';
+let currentFilter = 'all';
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  if (params.get('d')) {
+    document.getElementById('domainInput').value = params.get('d');
+    currentDomain = params.get('d').trim();
+  }
+  const total = CATEGORIES.reduce((a, c) => a + c.dorks.length, 0);
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('countAll').textContent = total;
+  renderAll();
+});
+
+document.getElementById('domainInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loadDomain();
+});
+
+// ── RENDER ──
+function renderAll() {
+  const col = document.getElementById('dorksCol');
+  // clear only cat-blocks, keep noResults in place
+  [...col.querySelectorAll('.cat-block')].forEach(el => el.remove());
+
+  const noRes = document.getElementById('noResults');
+  noRes.classList.remove('show');
+
+  let visible = 0;
+  CATEGORIES.forEach(cat => {
+    if (currentFilter !== 'all' && cat.id !== currentFilter) return;
+    visible++;
+    col.insertBefore(buildCatBlock(cat), noRes);
+  });
+
+  if (visible === 0) noRes.classList.add('show');
+  updateDomainStat();
+}
+
+function buildCatBlock(cat) {
+  const block = document.createElement('div');
+  block.className = 'cat-block';
+  block.dataset.cat = cat.id;
+
+  // header
+  const header = document.createElement('div');
+  header.className = 'cat-header';
+  header.innerHTML = `
+    <div class="cat-title">
+      <span class="cat-icon">${cat.icon}</span>
+      <div>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-desc">${cat.desc}</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="cat-count">${cat.dorks.length} DORKS</span>
+      <span class="cat-toggle">▼</span>
+    </div>`;
+  header.addEventListener('click', () => block.classList.toggle('collapsed'));
+
+  // body
+  const body = document.createElement('div');
+  body.className = 'cat-body';
+  cat.dorks.forEach(d => body.appendChild(buildDorkRow(d)));
+
+  block.appendChild(header);
+  block.appendChild(body);
+  return block;
+}
+
+function buildDorkRow(template) {
+  const dork = currentDomain
+    ? template.replace(/\{d\}/g, currentDomain)
+    : template.replace(/\{d\}/g, '{domain}');
+
+  const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(dork)}`;
+
+  const row = document.createElement('div');
+  row.className = 'dork-row' + (dork.length > 55 ? ' full-width' : '');
+
+  // highlighted text
+  const textDiv = document.createElement('div');
+  textDiv.className = 'dork-text';
+  if (currentDomain) {
+    const parts = dork.split(currentDomain);
+    parts.forEach((part, i) => {
+      textDiv.appendChild(document.createTextNode(part));
+      if (i < parts.length - 1) {
+        const span = document.createElement('span');
+        span.className = 'domain-placeholder';
+        span.textContent = currentDomain;
+        textDiv.appendChild(span);
+      }
+    });
+  } else {
+    const html = dork.replace(/\{domain\}/g, '<span class="domain-placeholder">{domain}</span>');
+    textDiv.innerHTML = html;
+  }
+
+  // actions
+  const actionsDiv = document.createElement('div');
+  actionsDiv.className = 'dork-actions';
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'btn-copy';
+  copyBtn.textContent = 'COPY';
+  copyBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(dork).then(() => {
+      copyBtn.textContent = 'COPIED';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1500);
+    }).catch(() => {
+      // fallback for non-https
+      const ta = document.createElement('textarea');
+      ta.value = dork;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      copyBtn.textContent = 'COPIED';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1500);
+    });
+  });
+
+  const searchBtn = document.createElement('button');
+  searchBtn.className = 'btn-search';
+  searchBtn.textContent = 'SEARCH ↗';
+  searchBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.open(googleUrl, '_blank');
+  });
+
+  actionsDiv.appendChild(copyBtn);
+  actionsDiv.appendChild(searchBtn);
+  row.appendChild(textDiv);
+  row.appendChild(actionsDiv);
+  return row;
+}
+
+// ── ACTIONS ──
+function loadDomain() {
+  const val = document.getElementById('domainInput').value.trim()
+    .replace(/^https?:\/\//i, '')
+    .replace(/^www\./i, '')
+    .replace(/\/.*$/, '');
+
+  if (!val) {
+    document.getElementById('warningBar').classList.add('show');
+    return;
+  }
+  document.getElementById('warningBar').classList.remove('show');
+  document.getElementById('domainInput').value = val;
+  currentDomain = val;
+  renderAll();
+  showToast(`Target loaded: ${val}`);
+}
+
+function clearDomain() {
+  document.getElementById('domainInput').value = '';
+  currentDomain = '';
+  document.getElementById('warningBar').classList.remove('show');
+  renderAll();
+}
+
+function filterCat(id, btn) {
+  currentFilter = id;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+function quickSearch(id) {
+  const btn = [...document.querySelectorAll('.tab-btn')]
+    .find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${id}'`));
+  if (btn) filterCat(id, btn);
+  document.getElementById('dorksCol').scrollIntoView({ behavior: 'smooth' });
+}
+
+function copyAllDorks() {
+  if (!currentDomain) {
+    document.getElementById('warningBar').classList.add('show');
+    document.getElementById('domainInput').focus();
+    return;
+  }
+  const all = [];
+  CATEGORIES.forEach(cat => {
+    if (currentFilter === 'all' || cat.id === currentFilter) {
+      cat.dorks.forEach(d => all.push(d.replace(/\{d\}/g, currentDomain)));
+    }
+  });
+  navigator.clipboard.writeText(all.join('\n')).then(() => {
+    showToast(`${all.length} dorks copied to clipboard`);
+  });
+}
+
+function updateDomainStat() {
+  const el = document.getElementById('statDomain');
+  el.textContent = currentDomain || '—';
+  el.style.color = currentDomain ? '#f59e0b' : '#6e7681';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function escapeReg(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+</script>
+</body>
+</html>
