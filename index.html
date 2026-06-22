@@ -619,6 +619,20 @@ nav ul li a:hover {
   transition: color 0.3s;
 }
 
+.cert-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  background: #f3f5f6;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px;
+}
+.cert-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
 /* ── ACKNOWLEDGEMENTS ── */
 .ack-grid {
   display: flex;
@@ -650,6 +664,37 @@ nav ul li a:hover {
 
 .ack-badge:hover::before { transform: scaleX(1); }
 .ack-badge:hover { color: var(--green); border-color: var(--green-dim); }
+
+/* ── HALL OF FAME LOGO WALL ── */
+.logo-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.logo-tile {
+  background: #f3f5f6;
+  border: 1px solid var(--border);
+  min-height: 122px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 16px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.logo-tile:hover { border-color: var(--green-dim); transform: translateY(-2px); }
+.logo-tile img {
+  max-width: 78%;
+  max-height: 44px;
+  object-fit: contain;
+}
+.logo-tile .logo-name {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #5b6470;
+  text-align: center;
+}
 
 /* ── EDUCATION ── */
 .edu-item {
@@ -1449,14 +1494,46 @@ footer span { color: var(--green-dim); }
       </div>
       <div class="cert-grid">
         <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/redhat.com" alt="Red Hat" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=redhat.com&sz=128'"></div>
           <div class="cert-badge">RHCE</div>
           <div class="cert-id">ID: <span>220-171-276</span></div>
           <div class="cert-desc">Red Hat Certified Engineer</div>
         </div>
         <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/redhat.com" alt="Red Hat" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=redhat.com&sz=128'"></div>
           <div class="cert-badge">RHCSA</div>
           <div class="cert-id">ID: <span>220-171-276</span></div>
           <div class="cert-desc">Red Hat Certified System Administrator</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/apisecuniversity.com" alt="APISEC University" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=apisecuniversity.com&sz=128'"></div>
+          <div class="cert-badge">CASA</div>
+          <div class="cert-id"><a href="https://www.credly.com/badges/41d9ea98-982d-4ce1-84e1-a1b06668b49e" target="_blank" rel="noopener" style="color:var(--cyan)">verify &#8599;</a></div>
+          <div class="cert-desc">Certified API Security Analyst — APISEC University</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/apisecuniversity.com" alt="APISEC University" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=apisecuniversity.com&sz=128'"></div>
+          <div class="cert-badge">ACP</div>
+          <div class="cert-id"><a href="https://www.credly.com/badges/4c00c61b-21c8-4393-9ed1-005411127cc2" target="_blank" rel="noopener" style="color:var(--cyan)">verify &#8599;</a></div>
+          <div class="cert-desc">APIsec Certified Practitioner — APISEC University</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/apisecuniversity.com" alt="APISEC University" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=apisecuniversity.com&sz=128'"></div>
+          <div class="cert-badge">API / PCI</div>
+          <div class="cert-id"><a href="https://www.credly.com/badges/7bb75a6b-a79f-441a-b3ed-4aa8f83b9e93" target="_blank" rel="noopener" style="color:var(--cyan)">verify &#8599;</a></div>
+          <div class="cert-desc">API Security for PCI Compliance — APISEC University</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/apisecuniversity.com" alt="APISEC University" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=apisecuniversity.com&sz=128'"></div>
+          <div class="cert-badge">API PT</div>
+          <div class="cert-id"><a href="https://www.credly.com/badges/b6e76c7c-7a7c-4bcd-b670-41f38fdc9a12" target="_blank" rel="noopener" style="color:var(--cyan)">verify &#8599;</a></div>
+          <div class="cert-desc">API Penetration Testing — APISEC University</div>
+        </div>
+        <div class="cert-card">
+          <div class="cert-logo"><img src="https://logo.clearbit.com/redteamleaders.com" alt="Red Team Leaders" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=redteamleaders.com&sz=128'"></div>
+          <div class="cert-badge">CCEP</div>
+          <div class="cert-id"><a href="https://courses.redteamleaders.com/exam-completion/89059d8630c64426" target="_blank" rel="noopener" style="color:var(--cyan)">verify &#8599;</a></div>
+          <div class="cert-desc">Certified Cybersecurity Educator Professional — Red Team Leaders</div>
         </div>
       </div>
     </div>
@@ -1499,29 +1576,29 @@ footer span { color: var(--green-dim); }
         <div class="sec-line"></div>
       </div>
       <p style="font-size:12px;color:var(--green-dim);margin-bottom:20px;letter-spacing:1px;">// Acknowledged by the following organizations for responsible security disclosures:</p>
-      <div class="ack-grid">
-        <span class="ack-badge">Microsoft</span>
-        <span class="ack-badge">Unicef</span>
-        <span class="ack-badge">QNAP</span>
-        <span class="ack-badge">Zerocopter</span>
-        <span class="ack-badge">Interserver</span>
-        <span class="ack-badge">Eufy</span>
-        <span class="ack-badge">Reolink</span>
-        <span class="ack-badge">Stackry</span>
-        <span class="ack-badge">Hubspire</span>
-        <span class="ack-badge">Skyvector</span>
-        <span class="ack-badge">Ripen</span>
-        <span class="ack-badge">Wondercise</span>
-        <span class="ack-badge">Vanila.io</span>
-        <span class="ack-badge">Duda.co</span>
-        <span class="ack-badge">2key</span>
-        <span class="ack-badge">Foxit Software</span>
-        <span class="ack-badge">Neo4j</span>
-        <span class="ack-badge">Aurigasec</span>
-        <span class="ack-badge">Yolt</span>
-        <span class="ack-badge">Mycast</span>
-        <span class="ack-badge" style="color:var(--green-dim);font-style:italic;">More adding soon...</span>
+            <div class="logo-wall">
+        <div class="logo-tile"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=microsoft.com&sz=128'"><div class="logo-name">Microsoft</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/unicef.org" alt="UNICEF" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=unicef.org&sz=128'"><div class="logo-name">UNICEF</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/qnap.com" alt="QNAP" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=qnap.com&sz=128'"><div class="logo-name">QNAP</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/zerocopter.com" alt="Zerocopter" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=zerocopter.com&sz=128'"><div class="logo-name">Zerocopter</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/interserver.net" alt="InterServer" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=interserver.net&sz=128'"><div class="logo-name">InterServer</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/eufy.com" alt="Eufy" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=eufy.com&sz=128'"><div class="logo-name">Eufy</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/reolink.com" alt="Reolink" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=reolink.com&sz=128'"><div class="logo-name">Reolink</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/stackry.com" alt="Stackry" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=stackry.com&sz=128'"><div class="logo-name">Stackry</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/hubspire.com" alt="Hubspire" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=hubspire.com&sz=128'"><div class="logo-name">Hubspire</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/skyvector.com" alt="SkyVector" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=skyvector.com&sz=128'"><div class="logo-name">SkyVector</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/ripen.com" alt="Ripen" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=ripen.com&sz=128'"><div class="logo-name">Ripen</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/wondercise.com" alt="Wondercise" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=wondercise.com&sz=128'"><div class="logo-name">Wondercise</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/vanila.io" alt="Vanila.io" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=vanila.io&sz=128'"><div class="logo-name">Vanila.io</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/duda.co" alt="Duda" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=duda.co&sz=128'"><div class="logo-name">Duda</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/2key.network" alt="2key" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=2key.network&sz=128'"><div class="logo-name">2key</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/foxit.com" alt="Foxit Software" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=foxit.com&sz=128'"><div class="logo-name">Foxit Software</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/neo4j.com" alt="Neo4j" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=neo4j.com&sz=128'"><div class="logo-name">Neo4j</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/aurigasec.com" alt="Aurigasec" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=aurigasec.com&sz=128'"><div class="logo-name">Aurigasec</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/yolt.com" alt="Yolt" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=yolt.com&sz=128'"><div class="logo-name">Yolt</div></div>
+        <div class="logo-tile"><img src="https://logo.clearbit.com/mycast.io" alt="Mycast" loading="lazy" onerror="this.onerror=null;this.src='https://www.google.com/s2/favicons?domain=mycast.io&sz=128'"><div class="logo-name">Mycast</div></div>
       </div>
+      <p style="font-size:12px;color:var(--green-dim);margin-top:16px;letter-spacing:1px;font-style:italic;">// More adding soon...</p>
     </div>
   </section>
 
