@@ -139,10 +139,15 @@ section{padding-top:110px}
 .role{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);font-size:14px;font-weight:700;color:var(--muted)}
 .role.top{background:var(--btn);color:var(--btn-ink);border-color:transparent}
 
-.hof{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,100%),1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
-.hof li{display:flex;align-items:center;justify-content:center;text-align:center;min-height:90px;padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:700;font-size:18px;color:var(--muted)}
-.hof li:nth-child(-n+3){color:var(--ink);font-weight:900}
-
+.hof{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(170px,100%),1fr));gap:12px}
+.hof li{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;min-height:132px;padding:18px 12px;border-radius:18px;background:var(--surface);border:1px solid var(--line);transition:border-color .2s,transform .2s}
+.hof li:hover{border-color:var(--accent);transform:translateY(-2px)}
+.logo{width:60px;height:60px;border-radius:16px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(20,18,31,.08)}
+.logo img{width:36px;height:36px;object-fit:contain}
+.logo.mono{background:linear-gradient(135deg,#6D5DFC,#11B5A4)}
+.logo.mono::after{content:attr(data-mono);color:#FFFFFF;font-weight:900;font-size:20px;letter-spacing:.02em}
+.hname{font-weight:700;font-size:16px}
+.hof li:nth-child(-n+3) .hname{font-weight:900}
 .contact{margin:110px 0 40px;border-radius:30px;padding:56px;background:var(--surface);border:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end;position:relative;overflow:hidden}
 .contact::before{content:"";position:absolute;width:520px;height:520px;right:-160px;top:-260px;border-radius:50%;background:var(--glow);filter:blur(60px);pointer-events:none}
 .contact h2{font-size:clamp(38px,5vw,64px);font-weight:900;letter-spacing:-.03em;position:relative}
@@ -185,7 +190,7 @@ footer{padding:0 0 40px;color:var(--muted);font-size:14px;display:flex;flex-wrap
   <section class="hero" style="padding-top:24px">
     <div class="hero-copy">
       <span class="status"><i></i>Available for red team engagements</span>
-      <h1>Licensed to break in. Hired to keep you safe.</h1>
+      <h1>Cleared for your most sensitive systems.</h1>
       <p class="lead">Security engineer and red teamer with 7+ years, 500+ findings and 100+ enterprises tested. Now EC-Council LPT (Master) and CPENT certified.</p>
       <div class="cta"><a class="btn solid" href="#contact">Start an engagement</a><a class="btn line" href="#experience">View my record</a></div>
     </div>
@@ -291,7 +296,7 @@ footer{padding:0 0 40px;color:var(--muted);font-size:14px;display:flex;flex-wrap
 
   <section id="hall-of-fame">
     <div class="sh"><h2>Hall of fame</h2><p>Organizations that acknowledged my responsible security disclosures. More on the way.</p></div>
-    <ul class="hof"><li>Microsoft</li><li>UNICEF</li><li>Drexel University</li><li>QNAP</li><li>Zerocopter</li><li>InterServer</li><li>Eufy</li><li>Reolink</li><li>Stackry</li><li>Hubspire</li><li>SkyVector</li><li>Ripen</li><li>Wondercise</li><li>Vanila.io</li><li>Duda</li><li>2key</li><li>Foxit Software</li><li>Neo4j</li><li>Aurigasec</li><li>Yolt</li><li>Mycast</li></ul>
+    <ul class="hof"><li><span class="logo" data-mono="M"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/microsoft.com.ico" alt="Microsoft logo" width="40" height="40"></span><span class="hname">Microsoft</span></li><li><span class="logo" data-mono="U"><img src="https://www.google.com/s2/favicons?domain=unicef.org&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/unicef.org.ico" alt="UNICEF logo" width="40" height="40"></span><span class="hname">UNICEF</span></li><li><span class="logo" data-mono="DU"><img src="https://www.google.com/s2/favicons?domain=drexel.edu&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/drexel.edu.ico" alt="Drexel University logo" width="40" height="40"></span><span class="hname">Drexel University</span></li><li><span class="logo" data-mono="Q"><img src="https://www.google.com/s2/favicons?domain=qnap.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/qnap.com.ico" alt="QNAP logo" width="40" height="40"></span><span class="hname">QNAP</span></li><li><span class="logo" data-mono="Z"><img src="https://www.google.com/s2/favicons?domain=zerocopter.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/zerocopter.com.ico" alt="Zerocopter logo" width="40" height="40"></span><span class="hname">Zerocopter</span></li><li><span class="logo" data-mono="I"><img src="https://www.google.com/s2/favicons?domain=interserver.net&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/interserver.net.ico" alt="InterServer logo" width="40" height="40"></span><span class="hname">InterServer</span></li><li><span class="logo" data-mono="E"><img src="https://www.google.com/s2/favicons?domain=eufy.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/eufy.com.ico" alt="Eufy logo" width="40" height="40"></span><span class="hname">Eufy</span></li><li><span class="logo" data-mono="R"><img src="https://www.google.com/s2/favicons?domain=reolink.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/reolink.com.ico" alt="Reolink logo" width="40" height="40"></span><span class="hname">Reolink</span></li><li><span class="logo" data-mono="S"><img src="https://www.google.com/s2/favicons?domain=stackry.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/stackry.com.ico" alt="Stackry logo" width="40" height="40"></span><span class="hname">Stackry</span></li><li><span class="logo" data-mono="H"><img src="https://www.google.com/s2/favicons?domain=hubspire.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/hubspire.com.ico" alt="Hubspire logo" width="40" height="40"></span><span class="hname">Hubspire</span></li><li><span class="logo" data-mono="S"><img src="https://www.google.com/s2/favicons?domain=skyvector.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/skyvector.com.ico" alt="SkyVector logo" width="40" height="40"></span><span class="hname">SkyVector</span></li><li><span class="logo" data-mono="R"><img src="https://www.google.com/s2/favicons?domain=ripen.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/ripen.com.ico" alt="Ripen logo" width="40" height="40"></span><span class="hname">Ripen</span></li><li><span class="logo" data-mono="W"><img src="https://www.google.com/s2/favicons?domain=wondercise.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/wondercise.com.ico" alt="Wondercise logo" width="40" height="40"></span><span class="hname">Wondercise</span></li><li><span class="logo" data-mono="VI"><img src="https://www.google.com/s2/favicons?domain=vanila.io&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/vanila.io.ico" alt="Vanila.io logo" width="40" height="40"></span><span class="hname">Vanila.io</span></li><li><span class="logo" data-mono="D"><img src="https://www.google.com/s2/favicons?domain=duda.co&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/duda.co.ico" alt="Duda logo" width="40" height="40"></span><span class="hname">Duda</span></li><li><span class="logo" data-mono="2"><img src="https://www.google.com/s2/favicons?domain=2key.network&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/2key.network.ico" alt="2key logo" width="40" height="40"></span><span class="hname">2key</span></li><li><span class="logo" data-mono="FS"><img src="https://www.google.com/s2/favicons?domain=foxit.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/foxit.com.ico" alt="Foxit Software logo" width="40" height="40"></span><span class="hname">Foxit Software</span></li><li><span class="logo" data-mono="N"><img src="https://www.google.com/s2/favicons?domain=neo4j.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/neo4j.com.ico" alt="Neo4j logo" width="40" height="40"></span><span class="hname">Neo4j</span></li><li><span class="logo" data-mono="A"><img src="https://www.google.com/s2/favicons?domain=aurigasec.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/aurigasec.com.ico" alt="Aurigasec logo" width="40" height="40"></span><span class="hname">Aurigasec</span></li><li><span class="logo" data-mono="Y"><img src="https://www.google.com/s2/favicons?domain=yolt.com&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/yolt.com.ico" alt="Yolt logo" width="40" height="40"></span><span class="hname">Yolt</span></li><li><span class="logo" data-mono="M"><img src="https://www.google.com/s2/favicons?domain=mycast.io&amp;sz=128" data-alt-src="https://icons.duckduckgo.com/ip3/mycast.io.ico" alt="Mycast logo" width="40" height="40"></span><span class="hname">Mycast</span></li></ul>
   </section>
 
   <section id="contact" class="contact">
@@ -309,6 +314,13 @@ footer{padding:0 0 40px;color:var(--muted);font-size:14px;display:flex;flex-wrap
   <footer><span>© 2026 MD Mahmudul Hasan</span><span>Security engineer and red teamer</span></footer>
 </main>
 <script>
+document.querySelectorAll('.logo img').forEach(function(img){
+  function mono(){img.parentNode.classList.add('mono');img.remove();}
+  function fail(){var alt=img.getAttribute('data-alt-src');if(alt){img.removeAttribute('data-alt-src');img.src=alt;}else{mono();}}
+  img.addEventListener('error',fail);
+  img.addEventListener('load',function(){if(img.naturalWidth===0)fail();});
+  if(img.complete&&img.naturalWidth===0)fail();
+});
 (function(){
   var b=document.getElementById('badge');
   if(!b||window.matchMedia('(prefers-reduced-motion: reduce)').matches||!window.matchMedia('(pointer: fine)').matches)return;
